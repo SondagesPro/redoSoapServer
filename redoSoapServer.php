@@ -2,9 +2,9 @@
 /**
  * Redo the SoapSrver of 1.87
  *
- * @author Denis Chenu <denis@sondages.pro>
+ * @author Denis Chenu <http://www.shnoulle.net>
  * @copyright 2016 Denis Chenu <http://www.sondages.pro>
- * @copyright 2016 Denis Chenu <http://www.sondages.pro>
+ * @copyright 2016 AXA Insurance (Gulf) B.S.C. <http://www.axa-gulf.com>
  * @license GPL v3
  * @version 0.1.0
  *
