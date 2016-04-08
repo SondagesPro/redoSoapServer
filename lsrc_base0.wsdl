@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<definitions name="LsrcService" targetNamespace="urn:lsrcNamespace"
+	xmlns:tns="urn:lsrcNamespace" xmlns="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:typens="lsrcSchema"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+	<types>
+		<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+			targetNamespace="urn:lsrcNamespace">
+			<xsd:element name="string" type="xsd:string"></xsd:element>
+		</xsd:schema>
+	</types>
+
+	<message name="sInsertParticipantsRequest">
+		<part name="sUser" type="xsd:string">
+			<documentation>Admin or Superadmin Account in Limesurvey needed
+			</documentation>
+		</part>
+		<part name="sPass" type="xsd:string">
+			<documentation>Correct password for the Superadmin in Limesurvey
+			</documentation>
+		</part>
+		<part name="iVid" type="xsd:int">
+			<documentation>SurveyID of existing Survey, which gets the Token table
+			</documentation>
+		</part>
+		<part name="sParticipantData" type="xsd:string">
+			<documentation>Data for Participant expected in this format:  [Firstname];[Lastname];[email@email.de]::[Firstname];[Lastname];[email@email.de]::[Firstname];[Lastname];[email@email.de] and so on... seperate the Datasets with :: and the Datafields in the Sets with ;
+			</documentation>
+		</part>
+	</message>
+
+	<message name="sInsertParticipantsResponse">
+		<part name="return" type="xsd:string" >
+			<documentation>This is the return Value of sInsertParticipants, if everything went fine it's "Token table populated successfully"
+			</documentation>
+		</part>
+	</message>
+	<message name="sInsertParticipantsFault">
+		<part name="fault" element="xsd:string"  />
+	</message>
+	<portType name="LsrcPortType">
+		<operation name="sInsertParticipants" >
+			<documentation>Create Token-Table and populate it with personal data for closed Surveys</documentation>
+			<input name="sInsertParticipantsRequest" message="tns:sInsertParticipantsRequest" />
+			<output name="sInsertParticipantsResponse" message="tns:sInsertParticipantsResponse" />
+			<fault name="sInsertParticipantsFault" message="tns:sInsertParticipantsFault"/>
+		</operation>
+	</portType>
+
+	<binding name="LsrcBinding" type="tns:LsrcPortType">
+		<soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http" />
+
+		<operation name="sInsertParticipants">
+			<soap:operation
+				soapAction="urn:lsrcNamespace/sInsertParticipants" />
+			<input name="sInsertParticipantsRequest">
+				<soap:body use="encoded" namespace="urn:lsrcNamespace"
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+			</input>
+			<output name="sInsertParticipantsResponse">
+				<soap:body use="encoded" namespace="urn:lsrcNamespace"
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+			</output>
+			<fault name="sInsertParticipantsFault">
+				<soap:fault use="encoded"
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+					name="sInsertParticipantsFault" />
+			</fault>
+		</operation>
+
+	</binding>
+
+	<service name="LsrcService">
+		<documentation>This is the LsrcService
+		for remote starting surveys and registering tokens in LimeSurvey.
+		Make sure to modify the soap:address to the current Location of the lsrcserver.php
+		It has to be like this: 'http://servername/[limesurveydir]/lsrcservice/lsrcserver.php'
+		NOTE: http for normal mode, begin the url with https for a SSL Webservice, it's just that easy.
+		</documentation>
+		<port name="LsrcPort" binding="tns:LsrcBinding">
+			<soap:address location="{lsrclocation}" />
+		</port>
+	</service>
+
+</definitions>
